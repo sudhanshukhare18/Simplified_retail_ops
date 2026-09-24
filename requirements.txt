@@ -1,0 +1,5 @@
+fastmcp
+supabase
+pymongo
+python-dotenv
+python-docx
