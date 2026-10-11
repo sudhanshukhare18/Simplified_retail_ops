@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Billing counter</h1>
+<p class="muted">Carts sent here (for example from Claude) wait in this queue, oldest first.</p>
+
+{% for r in queue %}
+<section class="card">
+  <div class="ticket-head">
+    <div>
+      <strong>Request #{{ r.id }}</strong>
+      <span class="muted">&middot; cart {{ r.cart_id }} &middot; from {{ r.requested_by_name or "unknown" }} &middot; {{ r.created_at|when }}</span>
+    </div>
+    <span class="status PENDING">PENDING</span>
+  </div>
+
+  {% if r.note %}<p><em>Note:</em> {{ r.note }}</p>{% endif %}
+
+  {% if r.cart and r.cart["items"] %}
+  <div class="table-wrap">
+    <table>
+      <tr><th>Product</th><th class="num">Qty</th><th class="num">Price</th><th class="num">Total</th></tr>
+      {% for i in r.cart["items"] %}
+      <tr>
+        <td>{{ i.name }}</td>
+        <td class="num">{{ i.quantity }}</td>
+        <td class="num">{{ i.selling_price|money }}</td>
+        <td class="num">{{ (i.selling_price * i.quantity)|money }}</td>
+      </tr>
+      {% endfor %}
+      <tr>
+        <td colspan="3" class="num"><strong>Subtotal</strong></td>
+        <td class="num"><strong>{{ r.cart.subtotal|money }}</strong></td>
+      </tr>
+    </table>
+  </div>
+
+  <form method="post" action="/billing/{{ r.id }}/bill" class="form-grid spaced">
+    <label>Customer name <input name="customer_name" value="{{ r.customer_name or '' }}" required></label>
+    <label>Mobile <input name="mobile" value="{{ r.mobile or '' }}" required></label>
+    <label>Email <input name="email" type="email" value="{{ r.email or '' }}" required></label>
+    <label>Offer code <input name="offer_code" value="{{ r.offer_code or '' }}"></label>
+    <button class="btn primary">Generate bill</button>
+  </form>
+  {% else %}
+  <p class="muted">This cart is empty or no longer exists.</p>
+  {% endif %}
+
+  <form method="post" action="/billing/{{ r.id }}/cancel" class="cancel">
+    <button class="btn small danger">Cancel request</button>
+  </form>
+</section>
+{% else %}
+<section class="card"><p class="muted">No carts are waiting. You're all caught up.</p></section>
+{% endfor %}
+
+<section class="card">
+  <h2>Recently handled</h2>
+  <div class="table-wrap">
+    <table>
+      <tr><th>#</th><th>Cart</th><th>From</th><th>Customer</th><th>Status</th><th>Handled</th><th></th></tr>
+      {% for r in handled %}
+      <tr>
+        <td>{{ r.id }}</td>
+        <td>{{ r.cart_id }}</td>
+        <td>{{ r.requested_by_name or "-" }}</td>
+        <td>{{ r.customer_name or "-" }}</td>
+        <td><span class="status {{ r.status }}">{{ r.status }}</span></td>
+        <td>{{ r.handled_at|when }}</td>
+        <td>{% if r.sale_id %}<a href="/receipt/{{ r.sale_id }}">Receipt</a>{% endif %}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="7" class="muted">Nothing handled yet.</td></tr>
+      {% endfor %}
+    </table>
+  </div>
+</section>
+{% endblock %}

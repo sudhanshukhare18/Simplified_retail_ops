@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Welcome, {{ user.username }}</h1>
+
+{% if pending_count %}
+<a class="alert" href="/billing">{{ pending_count }} cart{{ "s" if pending_count != 1 }} waiting at the billing counter &rarr;</a>
+{% endif %}
+
+<section class="stats">
+  <div class="stat"><span>My orders today</span><strong>{{ summary.today_orders }}</strong></div>
+  <div class="stat"><span>My sales today</span><strong>{{ summary.today_revenue|money }}</strong></div>
+  <div class="stat"><span>My orders this month</span><strong>{{ summary.month_orders }}</strong></div>
+  <div class="stat"><span>My sales this month</span><strong>{{ summary.month_revenue|money }}</strong></div>
+</section>
+
+<section class="card">
+  <h2>Product lookup</h2>
+  <form method="get" action="/salesperson" class="search">
+    <input name="q" value="{{ q }}" placeholder="Search products by name">
+    <button class="btn primary">Search</button>
+  </form>
+  {% if q %}
+  <div class="table-wrap">
+    <table>
+      <tr><th>ID</th><th>Name</th><th>Category</th><th class="num">Price</th><th class="num">In stock</th></tr>
+      {% for p in results %}
+      <tr>
+        <td>{{ p.id }}</td>
+        <td>{{ p.name }}</td>
+        <td>{{ p.category or "-" }}</td>
+        <td class="num">{{ p.selling_price|money }}</td>
+        <td class="num {{ 'low' if p.quantity <= 5 }}">{{ p.quantity }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5" class="muted">No products found.</td></tr>
+      {% endfor %}
+    </table>
+  </div>
+  {% endif %}
+</section>
+
+<section class="card">
+  <h2>My billing counter requests</h2>
+  <div class="table-wrap">
+    <table>
+      <tr><th>#</th><th>Cart</th><th>Customer</th><th>Status</th><th>Sent</th><th></th></tr>
+      {% for r in my_requests %}
+      <tr>
+        <td>{{ r.id }}</td>
+        <td>{{ r.cart_id }}</td>
+        <td>{{ r.customer_name or "-" }}</td>
+        <td><span class="status {{ r.status }}">{{ r.status }}</span></td>
+        <td>{{ r.created_at|when }}</td>
+        <td>{% if r.sale_id %}<a href="/receipt/{{ r.sale_id }}">Receipt</a>{% endif %}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="6" class="muted">Nothing sent to the counter yet. Ask Claude to escalate a cart to billing.</td></tr>
+      {% endfor %}
+    </table>
+  </div>
+</section>
+
+<section class="card">
+  <h2>My recent sales</h2>
+  <div class="table-wrap">
+    <table>
+      <tr><th>#</th><th>When</th><th>Customer</th><th>Discount</th><th class="num">Total</th><th></th></tr>
+      {% for s in recent_sales %}
+      <tr>
+        <td>{{ s.id }}</td>
+        <td>{{ s.created_at|when }}</td>
+        <td>{{ s.customer_name or "-" }}</td>
+        <td>{{ (s.discount_type or "-")|lower }}</td>
+        <td class="num">{{ s.final_amount|money }}</td>
+        <td><a href="/receipt/{{ s.id }}">View</a></td>
+      </tr>
+      {% else %}
+      <tr><td colspan="6" class="muted">No sales yet.</td></tr>
+      {% endfor %}
+    </table>
+  </div>
+</section>
+{% endblock %}

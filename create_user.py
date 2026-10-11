@@ -1,46 +1,24 @@
-# create_users.py
+import sys
+from getpass import getpass
 
 import bcrypt
-from database.postgres import get_connection
+
+from database.postgres import create_user, initialize_database
 
 
-def create_user(username, password, role):
-    password_hash = bcrypt.hashpw(
-        password.encode("utf-8"),
-        bcrypt.gensalt()
-    ).decode("utf-8")
-
-    with get_connection() as conn:
-        with conn.cursor() as cur:
-            cur.execute(
-                """
-                INSERT INTO users (username, password_hash, role)
-                VALUES (%s, %s, %s)
-                ON CONFLICT (username)
-                DO UPDATE SET
-                    password_hash = EXCLUDED.password_hash,
-                    role = EXCLUDED.role
-                """,
-                (username, password_hash, role)
-            )
-
-        conn.commit()
-
+def add_user(username, password, role):
+    password_hash = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+    create_user(username, password_hash, role)
     print(f"{role} created: {username}")
 
 
 if __name__ == "__main__":
+    initialize_database()
 
-    create_user(
-        username="salesperson",
-        password="salesperson123",
-        role="SALESPERSON"
-    )
-
-    create_user(
-        username="manager",
-        password="manager123",
-        role="MANAGER"
-    )
-
-    print("\nUsers created successfully.")
+    if len(sys.argv) == 3:
+        # python create_user.py <username> <SALESPERSON|MANAGER>   (asks for the password)
+        add_user(sys.argv[1], getpass("Password: "), sys.argv[2].upper())
+    else:
+        # Demo users - change these passwords before real use.
+        add_user("salesperson", "salesperson123", "SALESPERSON")
+        add_user("manager", "manager123", "MANAGER")

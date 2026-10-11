@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="x-apple-disable-message-reformatting">
+<title>RetailOps Invoice #{{order_id}}</title>
+</head>
+<body style="margin:0;padding:0;background-color:#EEF0F4;-webkit-text-size-adjust:100%;">
+
+<!-- Preheader (inbox preview text) -->
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:#EEF0F4;font-size:1px;line-height:1px;">
+  Thank you for shopping with RetailOps. Your invoice #{{order_id}} for ₹{{final_amount}} is ready.
+</div>
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#EEF0F4">
+<tr><td align="center" style="padding:32px 12px;">
+
+  <table role="presentation" width="640" cellpadding="0" cellspacing="0" border="0"
+         style="width:100%;max-width:640px;background-color:#FFFFFF;border-radius:14px;overflow:hidden;box-shadow:0 8px 30px rgba(11,18,32,0.12);">
+
+    <!-- ============ HEADER ============ -->
+    <tr>
+      <td bgcolor="#0B1220" style="background-color:#0B1220;padding:34px 40px 28px 40px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+          <tr>
+            <td valign="top">
+              <div style="font-family:Georgia,'Times New Roman',serif;font-size:26px;letter-spacing:4px;color:#FFFFFF;font-weight:bold;">
+                <span style="color:#C9A24B;">&#9670;</span>&nbsp;RETAILOPS
+              </div>
+              <div style="font-family:Arial,Helvetica,sans-serif;font-size:10px;letter-spacing:3px;color:#8E98AD;margin-top:6px;">
+                SMART RETAIL &nbsp;•&nbsp; SIMPLE BILLING
+              </div>
+            </td>
+            <td valign="top" align="right">
+              <div style="font-family:Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:3px;color:#C9A24B;font-weight:bold;">TAX INVOICE</div>
+              <div style="font-family:Georgia,'Times New Roman',serif;font-size:22px;color:#FFFFFF;margin-top:6px;">#{{order_id}}</div>
+              <div style="font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#8E98AD;margin-top:4px;">{{order_date}}</div>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <!-- gold accent line -->
+    <tr><td height="4" bgcolor="#C9A24B" style="background-color:#C9A24B;font-size:0;line-height:0;">&nbsp;</td></tr>
+
+    <!-- ============ GREETING ============ -->
+    <tr>
+      <td style="padding:36px 40px 8px 40px;">
+        <div style="font-family:Georgia,'Times New Roman',serif;font-size:24px;color:#0B1220;">
+          Thank you, {{customer_name}}.
+        </div>
+        <div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#5B6478;margin-top:10px;">
+          Your purchase is confirmed. Below is the invoice for your order. Please keep it safe for warranty and service.
+        </div>
+      </td>
+    </tr>
+
+    <!-- ============ BILLED TO / ORDER INFO ============ -->
+    <tr>
+      <td style="padding:24px 40px 8px 40px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+               style="background-color:#F7F8FB;border-radius:10px;">
+          <tr>
+            <td width="50%" valign="top" style="padding:20px 22px;">
+              <div style="font-family:Arial,Helvetica,sans-serif;font-size:10px;letter-spacing:2px;color:#9AA3B5;font-weight:bold;">BILLED TO</div>
+              <div style="font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#0B1220;font-weight:bold;margin-top:8px;">{{customer_name}}</div>
+              <div style="font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#5B6478;margin-top:4px;line-height:20px;">
+                +91 {{mobile}}<br>{{email}}
+              </div>
+            </td>
+            <td width="50%" valign="top" style="padding:20px 22px;border-left:1px solid #E4E7EE;">
+              <div style="font-family:Arial,Helvetica,sans-serif;font-size:10px;letter-spacing:2px;color:#9AA3B5;font-weight:bold;">ORDER DETAILS</div>
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-top:8px;">
+                <tr>
+                  <td style="font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#5B6478;padding:2px 14px 2px 0;">Invoice No.</td>
+                  <td style="font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#0B1220;font-weight:bold;">#{{order_id}}</td>
+                </tr>
+                <tr>
+                  <td style="font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#5B6478;padding:2px 14px 2px 0;">Order Date</td>
+                  <td style="font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#0B1220;font-weight:bold;">{{order_date}}</td>
+                </tr>
+                <tr>
+                  <td style="font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#5B6478;padding:2px 14px 2px 0;">Status</td>
+                  <td style="font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#1E8E5A;font-weight:bold;">{{delivery_status}}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <!-- ============ ITEMS ============ -->
+    <tr>
+      <td style="padding:28px 40px 0 40px;">
+        <div style="font-family:Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:2px;color:#0B1220;font-weight:bold;">ITEMIZED PURCHASE</div>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:12px;">
+          <tr>
+            <td style="font-family:Arial,Helvetica,sans-serif;font-size:10px;letter-spacing:1.5px;color:#9AA3B5;font-weight:bold;padding:10px 0;border-bottom:2px solid #0B1220;">DESCRIPTION</td>
+            <td align="center" width="50" style="font-family:Arial,Helvetica,sans-serif;font-size:10px;letter-spacing:1.5px;color:#9AA3B5;font-weight:bold;padding:10px 0;border-bottom:2px solid #0B1220;">QTY</td>
+            <td align="right" width="110" style="font-family:Arial,Helvetica,sans-serif;font-size:10px;letter-spacing:1.5px;color:#9AA3B5;font-weight:bold;padding:10px 0;border-bottom:2px solid #0B1220;">UNIT PRICE</td>
+            <td align="right" width="110" style="font-family:Arial,Helvetica,sans-serif;font-size:10px;letter-spacing:1.5px;color:#9AA3B5;font-weight:bold;padding:10px 0;border-bottom:2px solid #0B1220;">AMOUNT</td>
+          </tr>
+
+          {{items}}
+
+          <!--
+            {{items}} is replaced in Python with one row per product, in this format:
+
+            <tr>
+              <td style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#0B1220;font-weight:bold;padding:16px 0;border-bottom:1px solid #ECEEF3;">PRODUCT NAME</td>
+              <td align="center" style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#5B6478;padding:16px 0;border-bottom:1px solid #ECEEF3;">1</td>
+              <td align="right" style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#5B6478;padding:16px 0;border-bottom:1px solid #ECEEF3;">₹1,45,000</td>
+              <td align="right" style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#0B1220;font-weight:bold;padding:16px 0;border-bottom:1px solid #ECEEF3;">₹1,45,000</td>
+            </tr>
+          -->
+        </table>
+      </td>
+    </tr>
+
+    <!-- ============ TOTALS ============ -->
+    <tr>
+      <td style="padding:20px 40px 8px 40px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+          <tr>
+            <td width="45%">&nbsp;</td>
+            <td width="55%">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#5B6478;padding:7px 0;">Subtotal</td>
+                  <td align="right" style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#0B1220;padding:7px 0;">₹{{subtotal}}</td>
+                </tr>
+                <tr>
+                  <td style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#5B6478;padding:7px 0;">Discount</td>
+                  <td align="right" style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#1E8E5A;padding:7px 0;">− ₹{{discount}}</td>
+                </tr>
+                <tr><td colspan="2" style="border-top:1px solid #E4E7EE;font-size:0;line-height:0;height:8px;">&nbsp;</td></tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <!-- grand total bar -->
+    <tr>
+      <td style="padding:0 40px 8px 40px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#0B1220"
+               style="background-color:#0B1220;border-radius:10px;">
+          <tr>
+            <td style="padding:22px 26px;font-family:Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:3px;color:#C9A24B;font-weight:bold;">
+              TOTAL PAID
+            </td>
+            <td align="right" style="padding:22px 26px;font-family:Georgia,'Times New Roman',serif;font-size:30px;color:#FFFFFF;font-weight:bold;">
+              ₹{{final_amount}}
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <!-- ============ LOYALTY ============ -->
+    <tr>
+      <td style="padding:20px 40px 8px 40px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+               style="background-color:#FBF6E9;border:1px solid #EBDDB4;border-radius:10px;">
+          <tr>
+            <td style="padding:16px 22px;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:20px;color:#6B5A24;">
+              <span style="color:#C9A24B;font-size:16px;">&#9733;</span>&nbsp;
+              You earned <b style="color:#0B1220;">{{loyalty_points}} loyalty points</b> on this purchase.
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <!-- ============ THANK YOU ============ -->
+    <tr>
+      <td align="center" style="padding:34px 40px 10px 40px;">
+        <div style="font-family:Georgia,'Times New Roman',serif;font-size:18px;letter-spacing:2px;color:#0B1220;">
+          THANK YOU FOR SHOPPING WITH RETAILOPS
+        </div>
+        <div style="font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:21px;color:#5B6478;margin-top:8px;">
+          We appreciate your business and hope to serve you again soon.
+        </div>
+      </td>
+    </tr>
+
+    <!-- ============ FOOTER ============ -->
+    <tr>
+      <td bgcolor="#F7F8FB" style="background-color:#F7F8FB;padding:26px 40px;margin-top:20px;border-top:1px solid #E4E7EE;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+          <tr>
+            <td width="34%" valign="top" style="font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:19px;color:#5B6478;">
+              <b style="color:#0B1220;font-size:10px;letter-spacing:2px;">SUPPORT</b><br>
+              +91 7XXX-XXX-482
+            </td>
+            <td width="33%" valign="top" style="font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:19px;color:#5B6478;">
+              <b style="color:#0B1220;font-size:10px;letter-spacing:2px;">OUTLET</b><br>
+              12, MP Nagar, Bhopal<br>Madhya Pradesh – 462011
+            </td>
+            <td width="33%" valign="top" style="font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:19px;color:#5B6478;">
+              <b style="color:#0B1220;font-size:10px;letter-spacing:2px;">EMAIL</b><br>
+              support@retailops.example
+            </td>
+          </tr>
+        </table>
+        <div style="font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:17px;color:#9AA3B5;margin-top:18px;border-top:1px solid #E4E7EE;padding-top:14px;">
+          This is a computer-generated invoice and does not require a signature.<br>
+          RETAILOPS &nbsp;•&nbsp; Reg. No.: 23RTLOP**** &nbsp;•&nbsp; GSTIN: 23RTLOP*****
+        </div>
+      </td>
+    </tr>
+
+  </table>
+
+</td></tr>
+</table>
+
+</body>
+</html>

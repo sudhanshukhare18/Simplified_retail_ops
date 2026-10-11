@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card receipt">
+  <h1>RetailOps &mdash; Receipt #{{ sale.id }}</h1>
+  <p class="muted">{{ sale.created_at|when }}</p>
+  <p><strong>{{ sale.customer_name }}</strong><br>{{ sale.mobile }} &middot; {{ sale.email }}</p>
+
+  <div class="table-wrap">
+    <table>
+      <tr>
+        <th>Item</th><th class="num">Qty</th><th class="num">Price</th>
+        <th class="num">Discount</th><th class="num">Unit price</th><th class="num">Total</th>
+      </tr>
+      {% for i in sale["items"] %}
+      <tr>
+        <td>{{ i.product_name }}</td>
+        <td class="num">{{ i.quantity }}</td>
+        <td class="num">{{ i.selling_price|money }}</td>
+        <td class="num">{{ i.discount|money }}</td>
+        <td class="num">{{ i.final_unit_price|money }}</td>
+        <td class="num">{{ i.total_price|money }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+  <div class="totals">
+    <div><span>Subtotal</span><span>{{ sale.subtotal|money }}</span></div>
+    {% if sale.discount_type and sale.discount_type != "NONE" %}
+    <div><span>Discount ({{ sale.discount_type|lower }})</span><span>- {{ (sale.offer_discount + sale.loyalty_discount)|money }}</span></div>
+    {% endif %}
+    <div class="grand"><span>Total</span><span>{{ sale.final_amount|money }}</span></div>
+    {% if user.role == "MANAGER" %}
+    <div class="muted"><span>Profit (manager only)</span><span>{{ sale.total_profit|money }}</span></div>
+    {% endif %}
+  </div>
+
+  <p class="no-print">
+    <button class="btn primary" onclick="window.print()">Print</button>
+    <a class="btn" href="/billing">Back to billing counter</a>
+  </p>
+</section>
+{% endblock %}

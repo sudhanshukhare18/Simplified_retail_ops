@@ -1,5 +1,11 @@
 fastmcp
-supabase
+fastapi
+uvicorn
+jinja2
+python-multipart
+itsdangerous
+psycopg[binary]
+bcrypt
 pymongo
 python-dotenv
-python-docx
+tzdata

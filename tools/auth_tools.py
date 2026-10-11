@@ -1,119 +1,74 @@
-import bcrypt
+import secrets
+import time
 
-from database.postgres import get_user_by_username
+from services.auth_service import check_password
 
+SESSION_SECONDS = 8 * 3600
 
-# ============================================================
-# IN-MEMORY AUTHENTICATED SESSIONS
-# ============================================================
-
+# session_id -> {"user_id", "username", "role", "expires"}
+# Kept in memory, so everyone has to log in again after the server restarts.
 SESSIONS = {}
 
 
-# ============================================================
-# LOGIN
-# ============================================================
+def _get_session(session_id):
+    """The logged-in user for this session, or None if it is unknown or expired."""
+    session = SESSIONS.get(session_id)
+    if session and session["expires"] < time.time():
+        del SESSIONS[session_id]
+        return None
+    return session
+
+
+def require_role(session_id, *allowed_roles):
+    """Raise PermissionError unless the session belongs to a user with an allowed role."""
+    user = _get_session(session_id)
+    if not user:
+        raise PermissionError("Authentication required. Please login first.")
+    if user["role"].upper() not in [role.upper() for role in allowed_roles]:
+        raise PermissionError(f"Permission denied. Required role: {', '.join(allowed_roles)}")
+    return user
+
 
 def register_auth_tools(mcp):
 
     @mcp.tool()
     def login(username: str, password: str):
-
-        user = get_user_by_username(username)
-
+        """Log in as a salesperson or manager. Returns a session_id to pass to every other tool."""
+        user = check_password(username, password)
         if not user:
-            return {
-                "success": False,
-                "message": "Invalid username or password"
-            }
+            return {"success": False, "message": "Invalid username or password"}
 
-        password_valid = bcrypt.checkpw(
-            password.encode("utf-8"),
-            user["password_hash"].encode("utf-8")
-        )
-
-        if not password_valid:
-            return {
-                "success": False,
-                "message": "Invalid username or password"
-            }
-
-        session_id = f"{user['id']}:{user['username']}"
-
+        session_id = secrets.token_urlsafe(16)  # random, cannot be guessed
         SESSIONS[session_id] = {
             "user_id": user["id"],
             "username": user["username"],
-            "role": user["role"]
+            "role": user["role"],
+            "expires": time.time() + SESSION_SECONDS,
         }
-
         return {
             "success": True,
             "session_id": session_id,
             "username": user["username"],
             "role": user["role"],
-            "message": "Login successful"
+            "message": "Login successful",
         }
-
 
     @mcp.tool()
     def logout(session_id: str):
-
-        if session_id not in SESSIONS:
-            return {
-                "success": False,
-                "message": "Invalid session"
-            }
-
-        del SESSIONS[session_id]
-
-        return {
-            "success": True,
-            "message": "Logout successful"
-        }
-
+        """End a login session."""
+        if SESSIONS.pop(session_id, None) is None:
+            return {"success": False, "message": "Invalid session"}
+        return {"success": True, "message": "Logout successful"}
 
     @mcp.tool()
     def get_authenticated_user(session_id: str):
-
-        user = SESSIONS.get(session_id)
-
+        """Check who a session belongs to."""
+        user = _get_session(session_id)
         if not user:
-            return {
-                "authenticated": False,
-                "message": "Not authenticated"
-            }
-
+            return {"authenticated": False, "message": "Not authenticated"}
         return {
             "authenticated": True,
-            **user
+            "user_id": user["user_id"],
+            "username": user["username"],
+            "role": user["role"],
         }
-
-
-# ============================================================
-# INTERNAL AUTHORIZATION FUNCTIONS
-# ============================================================
-
-def require_authentication(session_id):
-
-    user = SESSIONS.get(session_id)
-
-    if not user:
-        raise PermissionError(
-            "Authentication required. Please login first."
-        )
-
-    return user
-
-
-def require_role(session_id, *allowed_roles):
-
-    user = require_authentication(session_id)
-
-    if user["role"] not in allowed_roles:
-
-        raise PermissionError(
-            f"Permission denied. Required role: "
-            f"{', '.join(allowed_roles)}"
-        )
-
-    return user

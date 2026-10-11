@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RetailOps</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+{% if user %}
+<header class="topbar">
+  <strong class="brand">RetailOps</strong>
+  <nav>
+    <a href="/">Dashboard</a>
+    <a href="/billing">Billing counter</a>
+  </nav>
+  <div class="who">
+    <span>{{ user.username }} <span class="badge">{{ user.role|lower }}</span></span>
+    <form method="post" action="/logout"><button class="btn small">Log out</button></form>
+  </div>
+</header>
+{% endif %}
+<main>
+  {% if flash %}<div class="flash {{ flash.kind }}">{{ flash.message }}</div>{% endif %}
+  {% block content %}{% endblock %}
+</main>
+</body>
+</html>
