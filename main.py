@@ -10,7 +10,7 @@ from resources.bill_resources import register_bill_resources
 
 # Initialize database
 initialize_database()
-
+ 
 
 # Create MCP server
 mcp = FastMCP("RetailOps")
